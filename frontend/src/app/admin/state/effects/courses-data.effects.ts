@@ -4,15 +4,18 @@ import { HttpClient } from '@angular/common/http';
 import { courseCommands, courseDocuments } from '../actions/courses.actions';
 import { map, switchMap } from 'rxjs';
 import { CourseEntity } from '../reducers/courses.reducer';
+import { environment } from 'src/environments/environment';
+
 @Injectable()
 export class CoursesDataEffects {
+  readonly baseUrl = environment.coursesUrl + 'courses';
   loadTheCourses$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(courseCommands.load),
       switchMap(() =>
         this.client
           .get<{ data: CourseEntity[] }>(
-            'http://localhost:1337/api/references/courses'
+            this.baseUrl
           )
           .pipe(map(({ data }) => courseDocuments.courses({ payload: data })))
       )

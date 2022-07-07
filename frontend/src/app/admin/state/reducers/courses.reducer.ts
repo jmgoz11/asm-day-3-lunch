@@ -1,5 +1,6 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, Action, on } from '@ngrx/store';
+import { courseDocuments } from '../actions/courses.actions';
 
 export interface CourseEntity {
   id: string;
@@ -14,4 +15,7 @@ export const adapter = createEntityAdapter<CourseEntity>();
 
 const initialState = adapter.getInitialState();
 
-export const reducer = createReducer(initialState);
+export const reducer = createReducer(
+  initialState,
+  on(courseDocuments.courses, (s,a) => adapter.upsertMany(a.payload,s))
+  );
